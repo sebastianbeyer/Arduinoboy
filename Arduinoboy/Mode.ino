@@ -46,30 +46,30 @@ void setMode()
  */
 void switchMode()
 {
-  switch(memory[MEM_MODE])
-  {
-    case 0:
-      modeLSDJSlaveSyncSetup();
-      break;
-    case 1:
-      modeLSDJMasterSyncSetup();
-      break;
-    case 2:
-      modeLSDJKeyboardSetup();
-      break;
-    case 3:
-      modeNanoloopSetup();
-      break;
-    case 4:
+//  switch(memory[MEM_MODE])
+//  {
+//    case 0:
+//      modeLSDJSlaveSyncSetup();
+//      break;
+//    case 1:
+//      modeLSDJMasterSyncSetup();
+//      break;
+//    case 2:
+//      modeLSDJKeyboardSetup();
+//      break;
+//    case 3:
+//      modeNanoloopSetup();
+//      break;
+//    case 4:
       modeMidiGbSetup();
-      break;
-    case 5:
-      modeLSDJMapSetup();
-      break;
-    case 6:
-      modeLSDJMidioutSetup();
-      break;
-  }
+//      break;
+//    case 5:
+//      modeLSDJMapSetup();
+//      break;
+//    case 6:
+//      modeLSDJMidioutSetup();
+//      break;
+//  }
 }
 
 

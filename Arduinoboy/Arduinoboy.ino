@@ -30,41 +30,7 @@
  *     - Gameboy Serial Data input on analog in pin 1                      *
  *     - Serial Data from gameboy on analog in pin 2                       *
  *                                                                         *
- *   Teensy pin settings:                                                  *
- *     - 6 LEDS on pins 23,22,21,20,4,13                                   *
- *     - Push button on pin 2 (for selecting mode)                         *
- *     - MIDI Opto-isolator power connected to +3v                         *
- *     - Gameboy Clock line on pin 16                                      *
- *     - Gameboy Serial Data input on analog in pin 17                     *
- *     - Serial Data from gameboy on analog in pin 18                      *
- *                                                                         *
- *   Teensy USB MIDI is supported                                          *
- *   Teensy LC should work but untested                                    *
- *                                                                         *
- * Program Information:                                                    *
- *    LSDJ Slave Mode Midi Note Effects:                                   *
- *      48 - C-2 Sends a Sequencer Start Command                           *
- *      49 - C#2 Sends a Sequencer Stop Command                            *
- *      50 - D-2 Toggles Normal Tempo                                      *
- *      51 - D#2 Toggles 1/2 Tempo                                         *
- *      52 - E-2 Toggles 1/4 Tempo                                         *
- *      53 - F-2 Toggles 1/8 Tempo                                         *
- *                                                                         *
- *    LSDJ Keyboard Mode:                                                  *
- *      48 - C-2 Mute Pu1 Off/On                                           *
- *      49 - C#2 Mute Pu2 Off/On                                           *
- *      50 - D-2 Mute Wav Off/On                                           *
- *      51 - D#2 Mute Noi Off/On                                           *
- *      52 - E-2 Livemode Cue Sequence                                     *
- *      53 - F-2 Livemode Cursor Up                                        *
- *      54 - F#2 Livemode Cursor Down                                      *
- *      55 - G-2 Livemode Cursor Left                                      *
- *      56 - G#2 Livemode Cursor Right                                     *
- *      57 - A-2 Table Up                                                  *
- *      58 - A#2 Table Down                                                *
- *      59 - B-2 Cue Table                                                 *
- *      60 - C-3 to C-8 Notes!                                             *
- *      Prgram Change to select from instrument table                      *
+
  *                                                                         *
  ***************************************************************************/
 /***************************************************************************
@@ -75,6 +41,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+
+ 
 #define MEM_MAX 65
 #define NUMBER_OF_MODES 7    //Right now there are 7 modes, Might be more in the future
 
@@ -109,7 +78,7 @@
 * User Settings
 ***************************************************************************/
 
-boolean usbMode                  = false; //to use usb for serial communication as oppose to MIDI - sets baud rate to 38400
+boolean usbMode   = false; //to use usb for serial communication as oppose to MIDI - sets baud rate to 38400
 
 byte defaultMemoryMap[MEM_MAX] = {
   0x7F,0x01,0x03,0x7F, //memory init check
@@ -421,6 +390,17 @@ uint8_t mapQueueWaitUsb = 5; //5ms - Needs to be longer because message packet i
 ***************************************************************************/
 #define GB_MIDI_DELAY 500 //Microseconds to delay the sending of a byte to gb
 
+// SEBI
+byte potmessage;
+int pot_value_0;
+int pot_value_1;
+int pot_value_2;
+int pot_value_3;
+int pot_oldValue_0;
+int pot_oldValue_1;
+int pot_oldValue_2;
+int pot_oldValue_3;
+
 void setup() {
 /*
   Init Memory
@@ -436,6 +416,20 @@ void setup() {
   pinMode(pinGBClock,OUTPUT);
   pinMode(pinGBSerialIn,INPUT);
   pinMode(pinGBSerialOut,OUTPUT);
+
+  // SEBI
+  pinMode(A3, INPUT);
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
+  pinMode(A6, INPUT);
+  pot_value_0 = analogRead(A3);
+  pot_value_1 = analogRead(A4);
+  pot_value_2 = analogRead(A5);
+  pot_value_3 = analogRead(A6);
+  pot_oldValue_0 = pot_value_0;
+  pot_oldValue_1 = pot_value_1;
+  pot_oldValue_2 = pot_value_2;
+  pot_oldValue_3 = pot_value_3;
 
 /*
   Set MIDI Serial Rate
@@ -487,7 +481,8 @@ void setup() {
   #ifndef USE_DUE
   if(!memory[MEM_FORCE_MODE]) memory[MEM_MODE] = EEPROM.read(MEM_MODE);
   #endif
-  lastMode = memory[MEM_MODE];
+  //lastMode = memory[MEM_MODE];
+  lastMode = 4;
 
 /*
   usbMidi sysex support

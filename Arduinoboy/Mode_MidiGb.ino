@@ -93,8 +93,87 @@ void modeMidiGb()
       setMode();                // Check if mode button was depressed
       updateBlinkLights();
       updateStatusLed();
+
+      // SEBI
+      potmessage = readPot_0();
+      if (potmessage != 255) send_cc_message(potmessage, 2, 2);
+      potmessage = readPot_1();
+      if (potmessage != 255) send_cc_message(potmessage, 1, 2);
+      potmessage = readPot_2();
+      if (potmessage != 255) send_cc_message(potmessage, 1, 1);
+      potmessage = readPot_3();
+      if (potmessage != 255) send_cc_message(potmessage, 1, 0);
+
+      
     }
   }
+}
+
+
+
+void send_cc_message(byte CCValue, byte CC, byte channel)
+{
+      // SEBI
+      // 1011 is midi control change, 0000 is channel 1
+      midiData[0] = B10110001;
+      midiData[0] = B10110000 + channel;
+      sendByteToGameboy(midiData[0]);
+      delayMicroseconds(GB_MIDI_DELAY);
+
+      // CC 0x01 - should be pulse width
+      midiData[1] = CC;
+      sendByteToGameboy(midiData[1]);
+      delayMicroseconds(GB_MIDI_DELAY);
+
+      //midiData[2] = B00111111;
+      midiData[2] = CCValue;
+      sendByteToGameboy(midiData[2]);
+      delayMicroseconds(GB_MIDI_DELAY);
+}
+
+byte readPot_0()
+{
+  pot_value_0 = analogRead(A3);
+  int tmp = (pot_oldValue_0 - pot_value_0);
+  if (tmp >= 8 || tmp <= -8) {
+    pot_oldValue_0 = pot_value_0 >> 3;
+    pot_oldValue_0 = pot_oldValue_0 << 3;
+    return pot_value_0 >> 3;
+  }
+  return 255;
+}
+byte readPot_1()
+{
+  pot_value_1 = analogRead(A4);
+  int tmp = (pot_oldValue_1 - pot_value_1);
+  if (tmp >= 8 || tmp <= -8) {
+    pot_oldValue_1 = pot_value_1 >> 3;
+    pot_oldValue_1 = pot_oldValue_1 << 3;
+    return pot_value_1 >> 3;
+  }
+  return 255;
+}
+byte readPot_2()
+{
+  pot_value_2 = analogRead(A5);
+  int tmp = (pot_oldValue_2 - pot_value_2);
+  if (tmp >= 8 || tmp <= -8) {
+    pot_oldValue_2 = pot_value_2 >> 3;
+    pot_oldValue_2 = pot_oldValue_2 << 3;
+    return pot_value_2 >> 3;
+  }
+  return 255;
+}
+byte readPot_3()
+{
+  pot_value_3 = analogRead(A6);
+  int tmp = (pot_oldValue_3 - pot_value_3);
+  if (tmp >= 8 || tmp <= -8) {
+    pot_oldValue_3 = pot_value_3 >> 3;
+    pot_oldValue_3 = pot_oldValue_3 << 3;
+    return pot_value_3 >> 3;
+  }
+  return 255;
 }
 
  /*
