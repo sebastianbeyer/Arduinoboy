@@ -1,9 +1,22 @@
+# My changes
+
+I added 3 potentiometers to control the waveshape for the
+three (melodic) channel and a fourth potentimeter controls the
+wave offset for the third channel.
+I have also changed some code to always be in MGB mode, because that is
+all I use and I don't have LEDs or buttons on my arduino (nano).
+Code is very hacky, sorry.
+All potentiometers are set up as voltage dividers between 5V and 0V.
+
+
+---
+
 # Arduinoboy
 Official ArduinoBoy Repository for serial MIDI communication to the Nintendo Gameboy.
 
 ![ScreenShot](http://trash80.net/arduinoboy/aboy1_2_0.jpg)
 
-## About 
+## About
 Arduinoboy is software for the [Arduino hardware platform](http://arduino.cc) that allows serial communication (MIDI) to the Nintendo Gameboy for music applications such as [LittleSoundDJ](http://littlesounddj.com), [Nanoloop.](http://www.nanoloop.com/), and [mGB](https://github.com/trash80/mGB)
 
 
@@ -12,7 +25,7 @@ Arduinoboy is software for the [Arduino hardware platform](http://arduino.cc) th
 * Accurate MIDI Sync, Start and Stop commands.
 * Push Button selector sets the sync/state modes [(7 modes available)](#modes-details)
 * [mGB](https://github.com/trash80/mGB)
- Mode: Full MIDI in support across all Gameboy Channels, including a unique "poly" mode allows you to play your Game Boy like a synthesizer. 
+ Mode: Full MIDI in support across all Gameboy Channels, including a unique "poly" mode allows you to play your Game Boy like a synthesizer.
 * Midi Out Doubles as a Midi Thru
 * "Filtering" data for only sync messages, no dedicated MIDI line required.
 * Can be powered by the Game Boy's gamelink port.
@@ -22,15 +35,15 @@ Arduinoboy is software for the [Arduino hardware platform](http://arduino.cc) th
 
 ## Modes Details
 #### Mode 1 - LSDJ as MIDI Slave Sync
-Slave your Game Boy running [LittleSoundDJ](http://littlesounddj.com) to your midi sequencer or Digital audio workstation.  
+Slave your Game Boy running [LittleSoundDJ](http://littlesounddj.com) to your midi sequencer or Digital audio workstation.
 
-You can send the arduinoboy midi notes to change sync resolution and start/stop the LSDJ sequencer.  
+You can send the arduinoboy midi notes to change sync resolution and start/stop the LSDJ sequencer.
 
 _LSDJ Slave Mode Midi Note Effects:_
 
 * 48 - `C-2` Sends a Sequencer Start Command
 * 49 - `C#2` Sends a Sequencer Stop Command
-* 50 - `D-2` Toggles Normal Tempo 
+* 50 - `D-2` Toggles Normal Tempo
 * 51 - `D#2` Toggles 1/2 Tempo
 * 52 - `E-2` Toggles 1/4 Tempo
 * 53 - `F-2` Toggles 1/8 Tempo
@@ -38,8 +51,8 @@ _LSDJ Slave Mode Midi Note Effects:_
 Higher note values than these map LSDJ song position row offset on a Song Start.
 
 In LSDJ the `sync` mode should be set to `Slave`
- 
-#### Mode 2 LSDJ as MIDI Master Sync. 
+
+#### Mode 2 LSDJ as MIDI Master Sync.
 
 Send Midi sync with LSDJ as a midi clock master, LSDJ also sends a Midi Note on message that corresponds to the song row number on play.
 
@@ -47,12 +60,12 @@ In LSDJ the `sync` mode should be set to `Master`
 
 
 #### Mode 3 LSDJ PC Keyboard mode.
-This mode emulates the [PC Keyboard Mode](http://littlesounddj.wikia.com/wiki/PC_Keyboard_Interface) built into LSDJ, allowing you to control the following aspects of LSDJ: 
+This mode emulates the [PC Keyboard Mode](http://littlesounddj.wikia.com/wiki/PC_Keyboard_Interface) built into LSDJ, allowing you to control the following aspects of LSDJ:
 
 Features:
 
-* The first octave controls M-U-T-E, 
-* Cursor control (LSDJ Live mode only), 
+* The first octave controls M-U-T-E,
+* Cursor control (LSDJ Live mode only),
 * Table selection
 * Table cue.
 
@@ -70,7 +83,7 @@ _PC Keyboard mode midi note map_
 * 45 - `A-1` Table Up
 * 46 - `A#1` Table Down
 * 47 - `B-1` Cue Table
-* 48+ - Notes from this note up will accept midi in from an external keyboard or sequencer and allow you to play the notes`C-2 to C-8`.  
+* 48+ - Notes from this note up will accept midi in from an external keyboard or sequencer and allow you to play the notes`C-2 to C-8`.
 * Midi Program Change messages will select from instrument table
 * Default Midi channel is 16. You can set this in the top of the main source file in the archive, or via the [Max Pat editor](#max).
 
@@ -82,14 +95,14 @@ Sync [Nanoloop.](http://www.nanoloop.com/) to external midi clock signals sent t
 In Nanoloop, the sync mode should be set to `slave`.
 
 #### Mode 5 Full MIDI with mGB
-[mGB](https://github.com/trash80/mGB) is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware) That enables the Gameboy to act as a MIDI supported sound module that allows full control of the Game Boy sound hardware. 
+[mGB](https://github.com/trash80/mGB) is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware) That enables the Gameboy to act as a MIDI supported sound module that allows full control of the Game Boy sound hardware.
 
 It works with the old DMG Gameboy as well as GBC/GBA.
 
-#### Mode 6 LSDJ MIDIMAP 
+#### Mode 6 LSDJ MIDIMAP
 Lsdj will sync to incoming MIDI sync, and incoming MIDI notes are mapped to LSDJ's song row #. The currently selected row's MIDI note is displayed on the top right of the LSDJ screen, and incoming MIDI notes will also display the relative song row number in the same location.
 
-In LSDJ the `sync` mode should be set to `MI.MAP`. 
+In LSDJ the `sync` mode should be set to `MI.MAP`.
 
 *This requires a special version of LSDJ, which can be found in your account on the [LSDJ website](http://littlesounddj.com/lsd/latest/full_version/).*
 
@@ -101,9 +114,9 @@ Each of the 4 gameboy channels send MIDI data on 4 midi channels by the use of e
 * `Xxx` - Sends a MIDI CC - By default in Arduinoboy the high nibble selects a CC#, and the low nibble sends a value `0-F` to `0-127`. This can be changed to allow just 1 midi CC with a range of `00`-`6F`, or 7 CCs with scaled or unscaled values.
 * `Yxx` - Sends a program/patch/preset change.
 
-By default each channel of LSDJ is mapped to midi channels 1-4. For example note commands from PU1 will be sent to midi channel 1. 
+By default each channel of LSDJ is mapped to midi channels 1-4. For example note commands from PU1 will be sent to midi channel 1.
 
-In LSDJ the `sync` mode should be set to `Midiout`. 
+In LSDJ the `sync` mode should be set to `Midiout`.
 
 *This requires a special version of LSDJ, which can be found in your account on the [LSDJ website](http://littlesounddj.com/lsd/latest/full_version/).*
 
@@ -115,7 +128,7 @@ In LSDJ the `sync` mode should be set to `Midiout`.
 ### Maxpat Settings
 * `Midi In/Out`
 Connect your arduinoboy to these ports on your system. Once it has connected, all the lights on your arduinoboy should flash in order, and the editor will show a green `Connected`.
-* `Mode` 
+* `Mode`
 Setting this will tell your arduinoboy what mode to boot into automatically. This is handy if you built your own arduinoboy and decided you wanted to skimp out on LEDs and a button.
 * `LSDJ Slave Mode settings` - The midi channel LSDJ slave mode will receive its commands on.
 * `LSDJ Master Mode settings` - The midi channel LSDJ Master mode will send its midi notes mapped to row number on.
@@ -150,12 +163,12 @@ Setting this will tell your arduinoboy what mode to boot into automatically. Thi
 
 ## Thanks To
   * [Arduino](http://arduino.cc)
-  * [Nitro2k01](http://blog.gg8.se/wordpress/) for ASM help with mGB 
+  * [Nitro2k01](http://blog.gg8.se/wordpress/) for ASM help with mGB
   * [GWEM](http://www.preromanbritain.com/gwem/lsdj_midi/g33k.html) g33k page
   * [Midines](http://wayfar.net) Thanks for the help x|k!
-  * [firestARTer](http://www.firestarter-music.de) help with keyboard & Midi handling information. 
+  * [firestARTer](http://www.firestarter-music.de) help with keyboard & Midi handling information.
   * [Gijs Gieskes](http://gieskes.nl) Found source code that gave insight into Nanoloop sync
   * [Little Sound DJ](http://littlesounddj.com)
   * [http://devrs.com/gb](http://devrs.com/gb) Madcatz PC link port for gb serial specs
   * [http://chipmusic.org](http://chipmusic.org) For all things Chipmusic.
-  
+
